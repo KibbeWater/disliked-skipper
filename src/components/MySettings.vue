@@ -5,25 +5,24 @@ const cfg = useConfig()
 </script>
 
 <template>
-  <div class="q-px-lg plugin-base">
-    Custom settings page
-    <div>
-      <button @click="cfg.count++">config count is: {{ cfg.count }}</button>
-    </div>
-    <div>
-      <label>
-        <input type="checkbox" v-model="cfg.booleanOption" /> Switch Setting
+  <div class="q-px-lg plugin-base" style="display: flex;flex-direction: column;gap:20px;">
+    <h2 style="font-size: 20px;font-weight:600;margin:0;">Dislikes Skipper settings</h2>
+    <div style="width: 100%;">
+      <label style="display: flex;align-items: center;justify-content: space-between;">Enable Dislikes Skipping
+        <input type="checkbox" v-model="cfg.enableSkipping" switch />
       </label>
     </div>
-    <div v-if="cfg.booleanOption">
-      <label>
-        Favorite Color
-        <select class="c-select" v-model="cfg.favoriteColor">
-          <option value="red">Red</option>
-          <option value="green">Green</option>
-          <option value="blue">Blue</option>
-        </select>
+    <div style="width: 100%;display: flex;flex-direction: column;gap:8px"><label
+        style="display: flex;align-items: center;justify-content: space-between;">Enable
+        Caching
+        <input type="checkbox" v-model="cfg.enableCache" switch />
       </label>
+      <div v-if="cfg.enableCache">
+        <label style="display: flex;align-items: center;justify-content: space-between;">
+          Cache Duration (min)
+          <input type="number" v-model="cfg.cacheDuration" style="width: 100px;" />
+        </label>
+      </div>
     </div>
   </div>
 </template>

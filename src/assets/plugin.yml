@@ -1,8 +1,8 @@
-identifier: sh.cider.plugin-template-wip
-name: Example Plugin
-description: Shows off some of the working plugin API draft
-author: ciderapp
-repo: https://github.com/ciderapp/plugin-template-wip
+identifier: com.snow.dislikes-skipper
+name: Dislikes Skipper
+description: Skip songs which have been marked as "suggest less" aka disliked
+author: Snow
+repo: https://github.com/kibbewater/dislikes-skipper
 entry:
-  "plugin.js":
-    type: main
+    'plugin.js':
+        type: main
