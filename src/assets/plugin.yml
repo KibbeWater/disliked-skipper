@@ -2,7 +2,7 @@ identifier: com.snow.dislikes-skipper
 name: Dislikes Skipper
 description: Skip songs which have been marked as "suggest less" aka disliked
 author: Snow
-repo: https://github.com/kibbewater/dislikes-skipper
+repo: https://github.com/kibbewater/disliked-skipper
 entry:
-    'plugin.js':
-        type: main
+  "plugin.js":
+    type: main
