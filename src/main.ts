@@ -55,7 +55,14 @@ export default {
             if (urlPath.startsWith('/v1/me/ratings/songs') && (opts.method === 'PUT' || opts.method === 'DELETE')) {
                 const songId = url.split('/').pop();
                 const curSongId = musicKit.queue.currentItem.id;
-                if (curSongId === songId && useConfig().skipSongOnDislike) {
+
+                const body = JSON.parse(opts.body);
+                if (
+                    opts.method === 'PUT' &&
+                    curSongId === songId &&
+                    body.attributes.value === -1 &&
+                    useConfig().skipSongOnDislike
+                ) {
                     console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
                     musicKit.skipToNextItem();
                 }
@@ -77,7 +84,14 @@ export default {
                 }, 1000);
                 if (cfg.patchRatingsAPI)
                     console.log('[Dislikes Skipper] [PATCH] Rewriting ratings URL to ' + newURL + ' from ' + url);
-                if (useConfig().skipSongOnDislike && curSongId === songId) {
+
+                const body = JSON.parse(opts.body);
+                if (
+                    opts.method === 'PUT' &&
+                    useConfig().skipSongOnDislike &&
+                    curSongId === songId &&
+                    body.attributes.value === -1
+                ) {
                     console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
                     musicKit.skipToNextItem();
                 }
