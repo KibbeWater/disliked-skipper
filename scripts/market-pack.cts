@@ -4,7 +4,6 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 (async () => {
-
     const { identifier } = (await import('../src/plugin.config')).default;
 
     // check that identifier has valid naming scheme, only lowercase letters, digits, dots and dashes
@@ -12,8 +11,8 @@ import { execSync } from 'child_process';
         throw new Error(`Invalid identifier: ${identifier}`);
     }
 
-    // run npm run build
-    execSync('npm run build');
+    // run bun run build
+    execSync('bun run build');
 
     // The file that will be sent to the marketplace
     const publishDir = path.resolve(__dirname, '../publish');
@@ -37,5 +36,4 @@ import { execSync } from 'child_process';
     const zip = new AdmZip();
     zip.addLocalFolder(distDir);
     zip.writeZip(path.resolve(publishDir, `${identifier}.zip`));
-
-})()
+})();
