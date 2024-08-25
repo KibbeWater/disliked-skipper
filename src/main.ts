@@ -105,6 +105,7 @@ export default {
         // Here we add a custom button to the top right of the chrome
         waitForMusicKit().then(() => {
             console.log('[Dislikes Skipper] MusicKit is ready, adding event listeners');
+            let lastPlayed: string;
             const musicKit = useMusicKit();
             musicKit.addEventListener('queueItemsDidChange', (queue: { id: string }[]) => {
                 const cfg = useConfig();
@@ -112,26 +113,36 @@ export default {
 
                 fetchRatings(queue.map((item) => item.id));
             });
-            musicKit.addEventListener(
-                'queuePositionDidChange',
-                async ({ oldPosition, position }: { oldPosition: number; position: number }) => {
-                    if (position === -1) return;
+            musicKit.addEventListener('nowPlayingItemDidChange', async (args: { item: any }) => {
+                const cfg = useConfig();
+                if (!cfg.enableSkipping) return;
 
-                    const cfg = useConfig();
-                    if (!cfg.enableSkipping) return;
+                const nowPlayingItem = args.item;
+                if (!nowPlayingItem) return;
 
-                    const curSong = musicKit.queue.currentItem;
-                    const ratings = await fetchRatings([curSong.id]);
+                const queue = musicKit.queue.items;
+                const nowPlayingIndex = queue.findIndex((item: { id: string }) => item.id === nowPlayingItem.id);
 
-                    if (ratings[curSong.id]?.rating !== 'disliked') return;
-                    const direction = position > oldPosition ? 'forward' : 'backward';
-                    if (direction === 'forward') musicKit.skipToNextItem();
-                    else musicKit.skipToPreviousItem();
-                    console.log(
-                        `[Dislikes Skipper] Skipped ${direction} from disliked song "${curSong.attributes.artistName} - ${curSong.attributes.name.trim()}"`,
-                    );
-                },
-            );
+                let direction: 'forward' | 'backward' | undefined;
+                if (lastPlayed) {
+                    direction = nowPlayingIndex > lastPlayed ? 'forward' : 'backward';
+                } else if (!lastPlayed) {
+                    direction = 'forward';
+                }
+
+                lastPlayed = nowPlayingIndex;
+
+                if (!direction) return;
+
+                const ratings = await fetchRatings([nowPlayingItem.id]);
+
+                if (ratings[nowPlayingItem.id]?.rating !== 'disliked') return;
+                if (direction === 'forward') musicKit.skipToNextItem();
+                else musicKit.skipToPreviousItem();
+                console.log(
+                    `[Dislikes Skipper] Skipped ${direction} from disliked song "${nowPlayingItem.attributes.artistName} - ${nowPlayingItem.attributes.name.trim()}"`,
+                );
+            });
         });
     },
 } as PluginAPI;
