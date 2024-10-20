@@ -27,7 +27,7 @@ const cfg = useConfig()
         </label>
       </div>
     </div>
-    <div style="width: 100%;display: flex;flex-direction: column;gap: 8px">
+    <!--<div style="width: 100%;display: flex;flex-direction: column;gap: 8px">
       <label style="display: flex;align-items: center;justify-content: space-between;">
         <div style="display: flex;flex-direction: column;justify-content: center;">
           <p style="margin:0" class="q-item__label">Rewrite malfunctioned API Calls</p>
@@ -36,7 +36,7 @@ const cfg = useConfig()
         </div>
         <input type="checkbox" v-model="cfg.patchRatingsAPI" switch />
       </label>
-    </div>
+    </div>-->
   </div>
 </template>
 

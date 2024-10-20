@@ -9,7 +9,7 @@ export const cfg = setupConfig({
     enableCache: <boolean>true,
     cacheDuration: <number>60,
     skipSongOnDislike: <boolean>true,
-    patchRatingsAPI: <boolean>true,
+    // patchRatingsAPI: <boolean>true,
 });
 
 export function useConfig() {

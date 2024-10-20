@@ -74,17 +74,13 @@ export default {
                 }, 1000);
             }
             if (urlPath.startsWith('/v1/me/ratings/song/') && (opts.method === 'PUT' || opts.method === 'DELETE')) {
-                const cfg = useConfig();
                 const curSongId = musicKit.queue.currentItem.id;
 
                 const songId = url.split('/').pop();
-                const newURL = cfg.patchRatingsAPI ? url.replace('ratings/song', 'ratings/songs') : url;
                 setTimeout(() => {
                     console.log('[Dislikes Skipper] Song has been rated, refetching ratings');
                     fetchRatings([songId], true);
                 }, 1000);
-                if (cfg.patchRatingsAPI)
-                    console.log('[Dislikes Skipper] [PATCH] Rewriting ratings URL to ' + newURL + ' from ' + url);
 
                 const body = JSON.parse(opts.body);
                 if (
@@ -96,8 +92,6 @@ export default {
                     console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
                     musicKit.skipToNextItem();
                 }
-
-                return originalFunc(newURL, opts);
             }
             return originalFunc(url, opts);
         };
