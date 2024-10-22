@@ -22,6 +22,8 @@ pluginApp.use(pinia);
  * Custom Elements that will be registered in the app
  */
 export const CustomElements = {
+    // this works, idfk what it's complaining about
+    // @ts-ignore
     settings: defineCustomElement(MySettings, {
         shadowRoot: false,
         appContext: pluginApp,

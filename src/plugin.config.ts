@@ -5,7 +5,7 @@ export default {
     identifier: 'com.snow.dislikes-skipper',
     name: 'Dislikes Skipper',
     description: 'Skip songs who have been disliked',
-    version: '1.0.5',
+    version: '1.0.6',
     author: 'snow',
     repo: 'https://github.com/kibbewater/disliked-skipper',
     entry: {
