@@ -46,56 +46,6 @@ export default {
             customElements.define(customElementName(_key), value);
         }
 
-        // Polyfill fetch to rewrite the ratings URL as a temporary workaround
-        // Also does cache refetching
-        const originalFunc = fetch;
-        // @ts-ignore
-        fetch = (url, opts) => {
-            const musicKit = useMusicKit();
-            const urlPath = url.match(/https?:\/\/[^\/]+(\/[^?#]*)/)?.[1] || ''; // const urlPath = new URL(url).pathname;
-            if (urlPath.startsWith('/v1/me/ratings/songs') && (opts.method === 'PUT' || opts.method === 'DELETE')) {
-                const songId = url.split('/').pop();
-                const curSongId = musicKit.queue.currentItem.id;
-
-                const body = JSON.parse(opts.body);
-                if (
-                    opts.method === 'PUT' &&
-                    curSongId === songId &&
-                    body.attributes.value === -1 &&
-                    useConfig().skipSongOnDislike
-                ) {
-                    console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
-                    musicKit.skipToNextItem();
-                }
-
-                setTimeout(() => {
-                    console.log('[Dislikes Skipper] Song has been rated, refetching ratings');
-                    fetchRatings([songId], true);
-                }, 1000);
-            }
-            if (urlPath.startsWith('/v1/me/ratings/song/') && (opts.method === 'PUT' || opts.method === 'DELETE')) {
-                const curSongId = musicKit.queue.currentItem.id;
-
-                const songId = url.split('/').pop();
-                setTimeout(() => {
-                    console.log('[Dislikes Skipper] Song has been rated, refetching ratings');
-                    fetchRatings([songId], true);
-                }, 1000);
-
-                const body = JSON.parse(opts.body);
-                if (
-                    opts.method === 'PUT' &&
-                    useConfig().skipSongOnDislike &&
-                    curSongId === songId &&
-                    body.attributes.value === -1
-                ) {
-                    console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
-                    musicKit.skipToNextItem();
-                }
-            }
-            return originalFunc(url, opts);
-        };
-
         // Here we add a custom button to the top right of the chrome
         waitForMusicKit().then(() => {
             console.log('[Dislikes Skipper] MusicKit is ready, adding event listeners');
