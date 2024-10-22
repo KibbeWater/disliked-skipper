@@ -9,6 +9,7 @@ import config from './plugin.config.ts';
 import { customElementName, waitForMusicKit } from './utils';
 import { fetchRatings } from './utils/ratings.ts';
 import { useConfig } from './config.ts';
+import { subscribeEvent } from './api/Events.ts';
 
 /**
  * Initializing a Vue app instance so we can use things like Pinia.
@@ -51,6 +52,24 @@ export default {
             console.log('[Dislikes Skipper] MusicKit is ready, adding event listeners');
             let lastPlayed: string;
             const musicKit = useMusicKit();
+            subscribeEvent('music:rating_set', (e: PAPITypes.Music.SetRatingChanged) => {
+                console.log(e);
+                if (e.type !== 'songs') return;
+
+                const curSongId = musicKit.queue.currentItem.id;
+
+                if (curSongId === e.id && e.rating === -1 && useConfig().skipSongOnDislike) {
+                    console.log('[Dislikes Skipper] Song has been rated, skipping to next song');
+                    musicKit.skipToNextItem();
+                }
+
+                setTimeout(() => {
+                    console.log('[Dislikes Skipper] Song has been rated, refetching ratings');
+                    fetchRatings([e.id], true);
+                }, 1000);
+
+                fetchRatings([e.id]);
+            });
             musicKit.addEventListener('queueItemsDidChange', (queue: { id: string }[]) => {
                 const cfg = useConfig();
                 if (!cfg.enableSkipping || !cfg.enableCache) return; // This is a pre-caching check, dont run if caching is disabled

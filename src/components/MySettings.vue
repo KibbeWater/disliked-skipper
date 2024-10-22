@@ -11,9 +11,9 @@ const cfg = useConfig()
       <label style="display: flex;align-items: center;justify-content: space-between;">Enable Dislikes Skipping
         <input type="checkbox" v-model="cfg.enableSkipping" switch />
       </label>
-      <!-- <label style="display: flex;align-items: center;justify-content: space-between;">Skip Song on Dislike
+      <label style="display: flex;align-items: center;justify-content: space-between;">Skip Song on Dislike
         <input type="checkbox" v-model="cfg.skipSongOnDislike" switch />
-      </label> -->
+      </label>
     </div>
     <div style="width: 100%;display: flex;flex-direction: column;gap:8px"><label
         style="display: flex;align-items: center;justify-content: space-between;">Enable
